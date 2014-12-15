@@ -20,17 +20,13 @@ use OCP\App;
 
 class LockingWrapperTest extends \Test\TestCase {
 
-	/**
-	 * @var OC_User
-	 */
+	/** @var OC_User */
 	private $user;
-	/**
-	 * @var Temporary
-	 */
+
+	/** @var Temporary */
 	private $fileSystem;
-	/**
-	 * @var LockingWrapper
-	 */
+
+	/** @var LockingWrapper */
 	private $fileLocker;
 
 	protected function setup() {
@@ -53,6 +49,7 @@ class LockingWrapperTest extends \Test\TestCase {
 		$storage2 = new LockingWrapper(array('storage' => $this->fileSystem));
 		$fh1 = $storage1->fopen('foo.txt', 'r');
 		$fh2 = $storage2->fopen('foo.txt', 'r');
+		$this->assertTrue(true);
 	}
 
 
@@ -64,7 +61,6 @@ class LockingWrapperTest extends \Test\TestCase {
 		$storage2 = new LockingWrapper(array('storage' => $this->fileSystem));
 		$fh1 = $storage1->fopen('foo.txt', 'w');
 		$fh2 = $storage2->fopen('foo.txt', 'r+');
-
 	}
 
 	/**
@@ -105,5 +101,6 @@ class LockingWrapperTest extends \Test\TestCase {
 		$fh = $storage1->fopen('foo.txt', 'r');
 		$storage1->rename('foo.txt', 'bar.txt');
 		$storage1->unlink('bar.txt');
+		$this->assertTrue(true);
 	}
 }

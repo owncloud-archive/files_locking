@@ -25,7 +25,7 @@ before_install:
 script:
   # Test lint
   - cd ../core/apps/$APP_NAME
-  - sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
+  - find . -name \*.php -exec php -l "{}" \;
 
   # Run phpunit tests
   - cd tests
