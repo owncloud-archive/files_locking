@@ -79,5 +79,6 @@ class LockTest extends \Test\TestCase {
 		$this->lockExistingHandleAndOutOfScope();
 		$lock = new Lock(__DIR__ . '/data/test.txt');
 		$lock->addLock(Lock::WRITE);
+		$this->assertTrue(true);
 	}
 }
