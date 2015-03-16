@@ -90,16 +90,16 @@ class Lock {
 
 		if ($this->isLockFileLocked($this->getLockFile($this->path))) {
 			\OC_Log::write('lock', sprintf('INFO: Read lock has locked lock file %s for %s', $this->getLockFile($this->path), $this->path), \OC_Log::DEBUG);
-			do {
+			while ($this->isLockFileLocked($this->getLockFile($this->path)) && $timeout > 0) {
 				usleep(Lock::$retryInterval * 1000);
 				$timeout--;
-			} while ($this->isLockFileLocked($this->getLockFile($this->path)) && $timeout > 0);
+			}
 			\OC_Log::write('lock', sprintf('INFO: Lock file %s has become unlocked for %s', $this->getLockFile($this->path), $this->path), \OC_Log::DEBUG);
 		} else {
-			do {
+			while ((!$lockReturn = flock($handle, LOCK_SH | LOCK_NB, $wouldBlock)) && $timeout > 0) {
 				usleep(Lock::$retryInterval * 1000);
 				$timeout--;
-			} while ((!$lockReturn = flock($handle, LOCK_SH | LOCK_NB, $wouldBlock)) && $timeout > 0);
+			}
 			if ($wouldBlock == true || $lockReturn == false || $timeout <= 0) {
 				\OC_Log::write('lock', sprintf('FAIL: Failed to acquire read lock for %s', $this->path), \OC_Log::DEBUG);
 				return false;
