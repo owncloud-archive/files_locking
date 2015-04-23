@@ -20,9 +20,6 @@ use OCP\App;
 
 class LockingWrapperTest extends \Test\TestCase {
 
-	/** @var OC_User */
-	private $user;
-
 	/** @var Temporary */
 	private $fileSystem;
 
