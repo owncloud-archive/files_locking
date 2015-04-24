@@ -20,9 +20,6 @@ use OCP\App;
 
 class LockingWrapperTest extends \Test\TestCase {
 
-	/** @var OC_User */
-	private $user;
-
 	/** @var Temporary */
 	private $fileSystem;
 
@@ -33,13 +30,6 @@ class LockingWrapperTest extends \Test\TestCase {
 		parent::setUp();
 
 		App::checkAppEnabled('files_locking');
-		OC_User::clearBackends();
-		OC_User::useBackend(new OC_User_Dummy());
-
-		// Login
-		OC_User::createUser('test', 'test');
-		$this->user = OC_User::getUser();
-		OC_User::setUserId('test');
 
 		$this->storage = $this->getTestStorage();
 	}
