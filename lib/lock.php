@@ -18,7 +18,6 @@
 
 namespace OCA\Files_Locking;
 
-use OCP\Config;
 use OC\Files\Filesystem;
 use OCP\Files\LockNotAcquiredException;
 
@@ -259,6 +258,9 @@ class Lock {
 
 	/**
 	 * Release locks on handles and files
+	 *
+	 * @param int $lockType
+	 * @return bool
 	 */
 	public function release($lockType) {
 		if (isset($this->stack[$lockType])) {
@@ -285,7 +287,7 @@ class Lock {
 	 */
 	public static function getLockFile($filename) {
 		if (!self::$locksDir) {
-			$dataDir = Config::getSystemValue('datadirectory');
+			$dataDir = \OC::$server->getConfig()->getSystemValue('datadirectory');
 			self::$locksDir = $dataDir . '/.locks';
 		}
 
