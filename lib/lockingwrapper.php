@@ -10,6 +10,7 @@
 namespace OCA\Files_Locking;
 
 use OC\Files\Filesystem;
+use OC\Files\Storage\Storage;
 use OC\Files\Storage\Wrapper\Wrapper;
 
 /**
@@ -25,7 +26,7 @@ use OC\Files\Storage\Wrapper\Wrapper;
 class LockingWrapper extends Wrapper {
 
 	/** @var \OCA\Files_Locking\Lock[] $locks Holds an array of lock instances indexed by path for this storage */
-	protected $locks = array();
+	protected $locks = [];
 
 	/**
 	 * Acquire a lock on a file
@@ -191,16 +192,16 @@ class LockingWrapper extends Wrapper {
 	}
 
 	/**
-	 * Setup the storate wrapper callback
+	 * Setup the storage wrapper callback
 	 */
 	public static function setupWrapper() {
 		// Set up flock
 		\OC\Files\Filesystem::addStorageWrapper('oc_flock', function ($mountPoint, $storage) {
 			/**
-			 * @var \OC\Files\Storage\Storage $storage
+			 * @var Storage $storage
 			 */
-			if ($storage instanceof \OC\Files\Storage\Storage && $storage->isLocal()) {
-				return new \OCA\Files_Locking\LockingWrapper(array('storage' => $storage));
+			if ($storage instanceof Storage && $storage->isLocal()) {
+				return new LockingWrapper(array('storage' => $storage));
 			} else {
 				return $storage;
 			}
