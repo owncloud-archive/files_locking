@@ -124,8 +124,8 @@ class LockingWrapper extends Wrapper {
 	public function rename($path1, $path2) {
 		try {
 			if (!$this->storage->is_dir($path1)) {
-				$this->getLock($path1, Lock::READ);
-				$this->getLock($path2, Lock::WRITE);
+				$lock1 = $this->getLock($path1, Lock::READ);
+				$lock2 = $this->getLock($path2, Lock::WRITE);
 			}
 			$result = $this->storage->rename($path1, $path2);
 		} catch (\Exception $originalException) {
@@ -136,10 +136,10 @@ class LockingWrapper extends Wrapper {
 		}
 		$this->releaseLock($path1, Lock::READ);
 		$this->releaseLock($path2, Lock::WRITE);
-		$lockPath1 = Filesystem::normalizePath($this->storage->getLocalFile($path1));
-		$lockPath2 = Filesystem::normalizePath($this->storage->getLocalFile($path2));
-		$this->locks[$lockPath2] = $this->locks[$lockPath1];
-		unset($this->locks[$lockPath1]);
+		if (isset($lock1) && isset($lock2)) {
+			$this->locks[$lock2->getPath()] = $this->locks[$lock1->getPath()];
+			unset($this->locks[$lock1->getPath()]);
+		}
 		return $result;
 	}
 
