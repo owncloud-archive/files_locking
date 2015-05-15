@@ -65,6 +65,13 @@ class Lock {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getPath() {
+		return $this->path;
+	}
+
+	/**
 	 * Acquire read lock on the current file.
 	 * If no existing handle is given, fopen() will be called
 	 * on the file to obtain one.

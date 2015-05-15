@@ -94,13 +94,20 @@ class LockingWrapperTest extends \Test\TestCase {
 		return $this->fileSystem;
 	}
 
-
 	public function testRenameAndWrite() {
 		$storage1 = new LockingWrapper(array('storage' => $this->fileSystem));
 
 		$fh = $storage1->fopen('foo.txt', 'r');
 		$storage1->rename('foo.txt', 'bar.txt');
 		$storage1->unlink('bar.txt');
+		$this->assertTrue(true);
+	}
+
+	public function testRenameFolder() {
+		$storage1 = new LockingWrapper(array('storage' => $this->fileSystem));
+
+		$storage1->mkdir('foo');
+		$storage1->rename('foo', 'bar');
 		$this->assertTrue(true);
 	}
 }
