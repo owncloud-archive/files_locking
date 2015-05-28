@@ -54,7 +54,7 @@ class LockingWrapper extends Wrapper {
 	 * @param bool $releaseAll If true, release all outstanding locks
 	 * @return bool true on success, false on failure
 	 */
-	protected function releaseLock($path, $lockType, $releaseAll = false) {
+	protected function releaseFLock($path, $lockType, $releaseAll = false) {
 		$path = Filesystem::normalizePath($this->storage->getLocalFile($path));
 		if (is_dir($path)) {
 			return false;
@@ -82,10 +82,10 @@ class LockingWrapper extends Wrapper {
 			$result = $this->storage->file_get_contents($path);
 		} catch (\Exception $originalException) {
 			// Need to release the lock before more operations happen in upstream exception handlers
-			$this->releaseLock($path, Lock::READ);
+			$this->releaseFLock($path, Lock::READ);
 			throw $originalException;
 		}
-		$this->releaseLock($path, Lock::READ);
+		$this->releaseFLock($path, Lock::READ);
 		return $result;
 	}
 
@@ -95,10 +95,10 @@ class LockingWrapper extends Wrapper {
 			$result = $this->storage->file_put_contents($path, $data);
 		} catch (\Exception $originalException) {
 			// Release lock, throw original exception
-			$this->releaseLock($path, Lock::WRITE);
+			$this->releaseFLock($path, Lock::WRITE);
 			throw $originalException;
 		}
-		$this->releaseLock($path, Lock::WRITE);
+		$this->releaseFLock($path, Lock::WRITE);
 		return $result;
 	}
 
@@ -112,12 +112,12 @@ class LockingWrapper extends Wrapper {
 			$result = $this->storage->copy($path1, $path2);
 		} catch (\Exception $originalException) {
 			// Release locks, throw original exception
-			$this->releaseLock($path1, Lock::READ);
-			$this->releaseLock($path2, Lock::WRITE);
+			$this->releaseFLock($path1, Lock::READ);
+			$this->releaseFLock($path2, Lock::WRITE);
 			throw $originalException;
 		}
-		$this->releaseLock($path1, Lock::READ);
-		$this->releaseLock($path2, Lock::WRITE);
+		$this->releaseFLock($path1, Lock::READ);
+		$this->releaseFLock($path2, Lock::WRITE);
 		return $result;
 	}
 
@@ -130,12 +130,12 @@ class LockingWrapper extends Wrapper {
 			$result = $this->storage->rename($path1, $path2);
 		} catch (\Exception $originalException) {
 			// Release locks, throw original exception
-			$this->releaseLock($path1, Lock::READ);
-			$this->releaseLock($path2, Lock::WRITE);
+			$this->releaseFLock($path1, Lock::READ);
+			$this->releaseFLock($path2, Lock::WRITE);
 			throw $originalException;
 		}
-		$this->releaseLock($path1, Lock::READ);
-		$this->releaseLock($path2, Lock::WRITE);
+		$this->releaseFLock($path1, Lock::READ);
+		$this->releaseFLock($path2, Lock::WRITE);
 		if (isset($lock1) && isset($lock2)) {
 			$this->locks[$lock2->getPath()] = $this->locks[$lock1->getPath()];
 			unset($this->locks[$lock1->getPath()]);
@@ -182,10 +182,10 @@ class LockingWrapper extends Wrapper {
 			$result = $this->storage->unlink($path);
 		} catch (\Exception $originalException) {
 			// Need to release the lock before more operations happen in upstream exception handlers
-			$this->releaseLock($path, Lock::WRITE);
+			$this->releaseFLock($path, Lock::WRITE);
 			throw $originalException;
 		}
-		$this->releaseLock($path, Lock::WRITE);
+		$this->releaseFLock($path, Lock::WRITE);
 		$lockPath = Filesystem::normalizePath($this->storage->getLocalFile($path));
 		unset($this->locks[$lockPath]);
 		return $result;
