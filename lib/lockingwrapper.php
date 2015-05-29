@@ -200,7 +200,7 @@ class LockingWrapper extends Wrapper {
 			/**
 			 * @var Storage $storage
 			 */
-			if ($storage instanceof Storage && $storage->isLocal() && !$storage->instanceOfStorage('\OC\Files\Storage\MappedLocal')) {
+			if ($storage->instanceOfStorage('OC\Files\Storage\Local') && !$storage->instanceOfStorage('\OC\Files\Storage\MappedLocal')) {
 				return new LockingWrapper(array('storage' => $storage));
 			} else {
 				return $storage;
