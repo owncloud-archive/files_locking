@@ -195,6 +195,12 @@ class LockingWrapper extends Wrapper {
 	 * Setup the storage wrapper callback
 	 */
 	public static function setupWrapper() {
+		$config = \OC::$server->getConfig();
+		if ($config->getSystemValue('filelocking.enabled', false)) {
+			// disable flock if transactional locking is enabled
+			return;
+		}
+
 		// Set up flock
 		\OC\Files\Filesystem::addStorageWrapper('oc_flock', function ($mountPoint, $storage) {
 			/**
